@@ -10,9 +10,13 @@ Strvec::Strvec(const Strvec & s)
     Strvec::first_free = Strvec::cap = newdata.second;
 }
 
-//Strvec Strvec::Strvec(Strvec && rhs)
-//{
-//}
+Strvec::Strvec(Strvec && rhs) noexcept
+{
+    Strvec::elements = std::move(rhs.elements);
+    Strvec::first_free = std::move(rhs.first_free);
+    Strvec::cap = std::move(rhs.cap);
+    rhs.elements = rhs.first_free = rhs.cap = nullptr;
+}
 
 // copy-assignment operator
 Strvec & Strvec::operator=(const Strvec & rhs)
@@ -24,18 +28,29 @@ Strvec & Strvec::operator=(const Strvec & rhs)
     return *this;
 }
 
-//Strvec & operator=(Strvec && rhs)
-//{
- //   this->free = rhs.free;
-  //  this->elements = rhs.elements;
-   // this->end = rhs.end;
-    //rhs.free = rhs.elements = rhs.end = nullptr;
-//}
+Strvec & Strvec::operator=(Strvec && rhs)
+{
+    if (this != &rhs)
+    {
+        free();
+        this->elements = std::move(rhs.elements);
+        this->first_free = std::move(rhs.first_free);
+        this->cap = std::move(rhs.cap);
+        rhs.elements = rhs.first_free = rhs.cap = nullptr; 
+    }
+    return *this;
+}
 
 void Strvec::push_back(const std::string & s)
 {
     Strvec::chk_n_alloc();
     Strvec::alloc.construct(first_free++, s);
+}
+
+void Strvec::push_back(std::string && s)
+{
+    Strvec::chk_n_alloc();
+    Strvec::alloc.construct(first_free++, std::move(s));
 }
 
 std::pair<std::string *, std::string *>

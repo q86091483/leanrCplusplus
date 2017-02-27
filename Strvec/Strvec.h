@@ -12,14 +12,15 @@ class Strvec
         // copy constructor
         Strvec(const Strvec &);
         // move constructor
-        // Strvec(Strvec &&) noexcept;
+        Strvec(Strvec &&) noexcept;
         // copy-assignment operator 
         Strvec & operator=(const Strvec &);
         // move-assignment operator 
-        // Strvec & operator=(Strvec &&);
+        Strvec & operator=(Strvec &&);
         // destructor
         ~Strvec(){free();};
         void push_back(const std::string &);
+        void push_back(std::string &&);
         // void push_back(std::string &&);
         size_t size(){return first_free - elements;}
         size_t capacity(){return cap - elements;}
@@ -37,4 +38,4 @@ class Strvec
         void reallocate();
 };
 
-# endif
+#endif
